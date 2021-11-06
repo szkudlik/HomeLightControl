@@ -1,0 +1,18 @@
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=UTF-8;
+Pragma: no-cache
+
+
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<META HTTP-EQUIV="refresh" CONTENT="120">
+<title>Indoor lights control</title><script src="1.js"></script>
+<style>
+r {color:red;}
+y {color:yellow;}
+body {text-align:center;font:20px Arial;background-color:LightGreen}
+button {text-align:center;font:15px Arial bold;}
+</style></head><body>
+<r>Room 1:</r><script>OutputControl(3,0);</script><br><br>
+<r>Room 2:</r><script>OutputControl(3,1);</script><br><br>
+<r>Room 3:</r><script>OutputControl(4,0);</script><br><br>

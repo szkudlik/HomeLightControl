@@ -1,0 +1,157 @@
+HTTP/1.0 200 OK
+Content-Type: application/javascript
+
+Queue = [];
+isBusyGetOutputParams = false;
+
+function GetOutputParams(Dev,Out)
+{
+	Queue.push(Dev,Out);
+	GetOutputProcessQueue();
+}
+
+function GetOutputProcessQueue()
+{
+	if ((Queue.length) && (false == isBusyGetOutputParams))
+	{
+		Dev=Queue.shift();
+		Out=Queue.shift();
+		GetOutputParamsExecute(Dev,Out);
+	}
+}
+
+function GetOutputParamsExecute(Dev,Out)
+{
+   var text = document.getElementById("Text"+Dev+Out);
+   text.innerHTML="...";
+   var theRequestUrl = "outputState?Dev="+Dev+"&Out="+Out;
+   var theRequest = new XMLHttpRequest();
+   theRequest.open("GET",theRequestUrl,true);
+   theRequest.timeout = 5000;
+   theRequest.onload = function() 
+   {
+        const obj = JSON.parse(theRequest.responseText);
+        window['CurrentTimer'+Dev+Out]=[obj.Timer];
+        window['DefaultTimer'+Dev+Out]=[obj.DefaultTimer];
+        if (0 == obj.State)
+        {
+            text.innerHTML="<b>OFF</b>";
+        }
+        else
+        {
+            text.innerHTML="<b>ON</b>";
+            if (obj.Timer > 0)
+            {
+                text.innerHTML= text.innerHTML + " stop za: <span id='TimerText"+Dev+Out+"'></span>";
+            }
+        }
+        if (1 == getQueryVariable("setup"))
+        {
+            var SetupText = document.getElementById("SetupText"+Dev+Out);
+            SetupText.innerHTML = "<br><i><small>Dev "+Dev+" Out "+Out+" default timer "+obj.DefaultTimer+"s ("+obj.DefaultTimer/60+"min)";
+            SetupText.innerHTML = SetupText.innerHTML+"</i></small>&nbsp<button type='button' onclick='DefTimerSet("+Dev+","+Out+");'>Zmień timer</button>";
+        }
+   }
+   theRequest.onloadend = function() 
+   {
+		isBusyGetOutputParams = false;
+		GetOutputProcessQueue();	   
+   }
+   isBusyGetOutputParams = true;
+   theRequest.send();
+}
+
+function OutputControl(Dev,Out)
+{
+   document.write("<i><span id='Text"+Dev+Out+"'><span></i><br>");
+   document.write("<button type='button' onclick='onStartBtn("+Dev+","+Out+");'>START</button>&nbsp")
+   document.write("<button type='button' onclick='onStartTimeBtn("+Dev+","+Out+");'>Ustaw czas</button>&nbsp")
+   document.write("<button type='button' onclick='onStopBtn("+Dev+","+Out+");'>STOP</button>&nbsp")
+   document.write("<span id='SetupText"+Dev+Out+"'></span>");
+   
+   document.write("<script>var CurrentTimer"+Dev+Out+"=[0];var DefaultTimer"+Dev+Out+"=[0];")
+   document.write("setInterval(timeCountown, 1000,"+Dev+","+Out+");</script>");
+
+   document.write("<br>");
+   GetOutputParams(Dev,Out);
+}
+
+function onStartBtn(Dev,Out)
+{
+    var defTimer = window['DefaultTimer'+Dev+Out][0];
+    OutputSet(Dev,Out,1,defTimer);
+}
+
+function onStartTimeBtn(Dev,Out)
+{
+    var defTimer = window['DefaultTimer'+Dev+Out][0];
+	if (0 == defTimer) defTimer = 60;
+    defTimer = defTimer / 60;
+    defTimer = prompt('Wyłącz po ... min',defTimer);
+    if (defTimer == null) return;
+    defTimer = defTimer * 60;
+    OutputSet(Dev,Out,1,defTimer);
+}
+
+function onStopBtn(Dev,Out)
+{
+    OutputSet(Dev,Out,0,0);
+}
+
+function OutputSet(Dev,Out,State,Timer)
+{
+	var theRequestUrl = "outputSet?Dev="+Dev+"&Out="+Out+"&State="+State+"&Timer="+Timer;
+	var theRequest = new XMLHttpRequest();
+	theRequest.open("GET",theRequestUrl,true);
+	theRequest.onload = function() { GetOutputParams(Dev,Out); }
+	theRequest.send();
+}
+
+function DefTimerSet(Dev,Out)
+{
+    defTimer = window['DefaultTimer'+Dev+Out][0];
+	defTimer = defTimer / 60;
+	defTimer = prompt('Ustaw timer na ... min',defTimer);
+	if (defTimer == null) return;			
+	defTimer = defTimer * 60;
+	var theRequestUrl = "timerset?Dev="+Dev+"&Out="+Out+"&Timer="+defTimer;
+
+	var theRequest = new XMLHttpRequest();
+	theRequest.open("GET",theRequestUrl,true);
+	theRequest.onload = function() { GetOutputParams(Dev,Out); }
+	theRequest.send();
+}
+
+function getQueryVariable(variable)
+{
+   var query = window.location.search.substring(1);
+   var vars = query.split("&");
+   for (var i=0;i<vars.length;i++) {
+		   var pair = vars[i].split("=");
+		   if(pair[0] == variable){return pair[1];}
+   }
+   return(false);
+}
+
+function timeCountown(Dev,Out)
+{
+  var Timer = window['CurrentTimer'+Dev+Out][0];
+  if (Timer == 0) return;
+  Timer--;
+  window['CurrentTimer'+Dev+Out] = [Timer];
+  if (Timer == 0) 
+  {
+    GetOutputParams(Dev,Out);
+    return;
+  }
+
+  var hours = Math.floor(Timer / 3600);
+  var minutes = Math.floor((Timer % 3600) / 60);
+  var seconds = Timer % 60;
+  
+  var str = ""; 
+  if (hours) str = str+hours+"h ";
+  if (minutes + hours) str = str+minutes+"m ";
+  str = str+seconds+"s"
+  document.getElementById("TimerText"+Dev+Out).innerHTML = str;
+}
