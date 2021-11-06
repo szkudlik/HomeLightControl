@@ -1,0 +1,7 @@
+Arduino libraries:
+1) AceCRC 1.0 https://github.com/bxparks/AceCRC
+2) ArduinoQueue 1.2.3 https://github.com/EinarArnason/ArduinoQueue
+3) Commander 4.0.1 https://github.com/CreativeRobotics/Commander
+4) ProcessScheduler 1.0 https://github.com/wizard97/ArduinoProcessScheduler
+5) RingBuf 2.0 https://github.com/wizard97/ArduinoRingBuffer
+6) Watchdog 3.0.2 https://github.com/janelia-arduino/Watchdog.git
