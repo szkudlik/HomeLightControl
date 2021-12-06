@@ -137,7 +137,7 @@ bool WorkerProcess::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t
 
 void WorkerProcess::HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message)
 {
-  OutputProcess.SetOutput(Message->OutId,Message->State,Message->Timer); 
+  OutputProcess.SetOutput(Message->OutId,Message->State,Message->Timer,tOutputProcess::ForceTimer);
 }
 
 
@@ -216,16 +216,17 @@ void WorkerProcess::HandleMsgButtonPress(uint8_t SenderID, tMessageTypeButtonPre
     switch (Action.ActionType)
     {
       case BUTTON_ACTION_TYPE_ON: 
-        OutputProcess.SetOutput(Action.OutId,1,Timer); 
+         // when "turn on" action is triggered bu a button, don't set a timer if it is shorter than current timer
+        OutputProcess.SetOutput(Action.OutId,1,Timer,tOutputProcess::TimerLongerOnly);
         break;
-        
+
       case BUTTON_ACTION_TYPE_OFF:
-        OutputProcess.SetOutput(Action.OutId,0,Timer); 
+        OutputProcess.SetOutput(Action.OutId,0,0,tOutputProcess::ForceTimer);
         break;
-        
+
       case BUTTON_ACTION_TYPE_TOGGLE:      
         OutputProcess.ToggleOutput(Action.OutId,Timer); 
-        break;        
+        break;
     }
   }
 }

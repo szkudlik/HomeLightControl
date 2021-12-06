@@ -14,7 +14,14 @@ public:
 
   void SetPin(uint8_t pin) { mPin = pin; pinMode(mPin, OUTPUT); SetState(0); }
 
-  void Set(uint8_t State, uint16_t Timer) { mTimer = Timer; SetState(State); }
+  void Set(uint8_t State, uint16_t Timer, bool timerLongerOnly)
+  {
+     if (timerLongerOnly && (mTimer > Timer))
+           Timer = mTimer;
+
+     if (mState) mTimer = Timer; else mTimer = 0;
+     SetState(State);
+  }
   void Toggle(uint16_t Timer) 
   { 
     SetState(! mState); 
@@ -40,9 +47,12 @@ class tOutputProcess : public  Process
   tOutputProcess(Scheduler &manager) : 
     Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME) {}
   
-  void SetOutput(uint8_t outputId, uint8_t State, uint16_t timer) 
+  static const bool TimerLongerOnly = true;
+  static const bool ForceTimer = false;
+
+  void SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
   { 
-    if (outputId < NUM_OF_OUTPUTS) Output[outputId].Set(State,timer);
+    if (outputId < NUM_OF_OUTPUTS) Output[outputId].Set(State,timer,timerLongerOnly);
   }
 
   void ToggleOutput(uint8_t outputId, uint16_t timer) 
