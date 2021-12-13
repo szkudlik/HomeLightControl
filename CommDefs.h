@@ -33,11 +33,7 @@
 // maximum number of nodes, should not be mode than 32 because of bitmaps
 #define MAX_NUM_OF_NODES 32
 
-#ifdef CONTROLLER
 #define NUM_OF_OUTPUTS 8
-#else
-#define NUM_OF_OUTPUTS 6
-#endif
 
 #define DEFAULT_TIMER 0xFFFF
 
