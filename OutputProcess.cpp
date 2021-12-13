@@ -53,7 +53,7 @@ uint8_t  tOutputProcess::GetOutputTimersStateMap()
       Map |= 1 << i;
   } 
 
-  return Map;  
+  return Map;
 }
 
 
@@ -76,5 +76,6 @@ void tOutput::SetState(uint8_t State)
         else DEBUG_SERIAL.println(F("INACTICVE"));
   #endif
   mState = State; 
-  digitalWrite(mPin,(State ? LOW : HIGH)); 
+  if (PIN_NOT_ASSIGNED != mPin)
+     digitalWrite(mPin,(State ? LOW : HIGH));
 }

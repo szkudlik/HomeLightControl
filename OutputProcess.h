@@ -9,8 +9,9 @@
 
 class tOutput 
 {
+   static const uint8_t PIN_NOT_ASSIGNED = 255;
 public:
-  tOutput() {}
+  tOutput() :mPin(PIN_NOT_ASSIGNED) {}
 
   void SetPin(uint8_t pin) { mPin = pin; pinMode(mPin, OUTPUT); SetState(0); }
 
