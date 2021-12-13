@@ -73,6 +73,48 @@ bool tSetTimerServlet::ProcessAndResponse()
 	return false;
 }
 
+bool tForceButtonPressServlet::ProcessAndResponse()
+{
+   uint16_t Device;  // forced device iD sender
+   uint16_t ShortClickBitmap = 0;
+   uint16_t LongClickBitmap = 0;
+   uint16_t DoubleClickBitmap = 0;
+   bool ParametersOK = true;
+
+   ParametersOK = GetParameter("Dev",&Device);
+   if (! ParametersOK)
+   {
+     SendResponse400();
+     return false;
+   }
+
+   // other params optional
+   GetParameter("Short",&ShortClickBitmap);
+   GetParameter("Long",&LongClickBitmap);
+   GetParameter("Double",&DoubleClickBitmap);
+
+
+   // execute
+
+   #ifdef DEBUG_3
+   RespHandler.print(F("HTTP forced buttom press - forced SRC Dev ID:"));
+   RespHandler.print(Device,HEX);
+   RespHandler.print(F(" short:"));
+   RespHandler.print(ShortClickBitmap,BIN);
+   RespHandler.print(F(" long:"));
+   RespHandler.print(LongClickBitmap,BIN);
+   RespHandler.print(F(" dbl:"));
+   RespHandler.println(DoubleClickBitmap,BIN);
+   #endif
+
+   Worker.SendMsgButtonPress(DEVICE_ID_BROADCAST, Device, ShortClickBitmap, LongClickBitmap, DoubleClickBitmap);
+
+   SendResponse200();
+
+   return false;
+}
+
+
 
 
 void tOutputStateServlet::vOutputStateResponseHandler(uint8_t DevID, uint8_t OutputID, uint8_t PowerState, uint16_t  TimerValue, uint16_t DefaultTimer)

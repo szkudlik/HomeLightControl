@@ -40,6 +40,8 @@ tHttpServlet * ServletFactory(String *pRequestBuffer)
    if (pRequestBuffer->startsWith("/1.js")) return new tjavaScriptServlet();
    if (pRequestBuffer->startsWith("/garden")) return new tGardenLightsServlet();
    if (pRequestBuffer->startsWith("/indoorLights")) return new tIndoorLightsServlet();
+   if (pRequestBuffer->startsWith("/button")) return new tForceButtonPressServlet();
+
 
    return new tDefaultPageServlet();
 }

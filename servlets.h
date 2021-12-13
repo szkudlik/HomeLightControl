@@ -29,6 +29,18 @@ public:
 };
 
 /**
+ * force button servlet - send a button press
+ */
+class tForceButtonPressServlet :  public tHttpServlet
+{
+public:
+  tForceButtonPressServlet() : tHttpServlet() {}
+  virtual ~tForceButtonPressServlet() {}
+
+  virtual bool ProcessAndResponse();
+};
+
+/**
  * output servlet - controlling or checking state of an output
  */
 class tSetTimerServlet :  public tHttpServlet
