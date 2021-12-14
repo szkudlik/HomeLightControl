@@ -3,7 +3,8 @@
 
 #define FW_VERSION_MAJOR 1
 #define FW_VERSION_MINOR 2
-#define FW_VERSION_PATCH 7
+#define FW_VERSION_PATCH 9
+
 #define stringify_literal( x ) # x
 #define stringify_expanded( x ) stringify_literal( x )
 
