@@ -13,7 +13,7 @@ class tOutput
 public:
   tOutput() :mPin(PIN_NOT_ASSIGNED) {}
 
-  void SetPin(uint8_t pin) { mPin = pin; pinMode(mPin, OUTPUT); SetState(0); }
+  void SetPin(uint8_t pin, uint8_t Polarity) { mPin = pin; mPolarity = Polarity; pinMode(mPin, OUTPUT); SetState(0); }
 
   void Set(uint8_t State, uint16_t Timer, bool timerLongerOnly)
   {
@@ -38,8 +38,9 @@ private:
   void SetState(uint8_t State);
   uint8_t mPin;
   uint16_t mTimer;
-  uint8_t mState;
-    
+  uint8_t mState   : 1,
+         mPolarity : 1,
+         Reserved  : 6;
 };
 
 class tOutputProcess : public  Process

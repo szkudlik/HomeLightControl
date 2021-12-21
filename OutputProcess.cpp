@@ -1,25 +1,29 @@
 #include "OutputProcess.h"
 #include "CommDefs.h"
+#include "Eeprom.h"
 
 
 void tOutputProcess::setup()
 {
   #ifdef CONTROLLER
-    Output[0].SetPin(28);
-    Output[1].SetPin(29);
-    Output[2].SetPin(30);
-    Output[3].SetPin(31);
-    Output[4].SetPin(32);
-    Output[5].SetPin(33);
-    Output[6].SetPin(34);
-    Output[7].SetPin(35);
+    Output[0].SetPin(28,0);
+    Output[1].SetPin(29,0);
+    Output[2].SetPin(30,0);
+    Output[3].SetPin(31,0);
+    Output[4].SetPin(32,0);
+    Output[5].SetPin(33,0);
+    Output[6].SetPin(34,0);
+    Output[7].SetPin(35,0);
   #else
-    Output[0].SetPin(A5);
-    Output[1].SetPin(A4);
-    Output[2].SetPin(A3);
-    Output[3].SetPin(A2);
-    Output[4].SetPin(A1);
-    Output[5].SetPin(A0);
+    uint8_t OutputPolarity;
+    EEPROM.get(EEPROM_OUTPUT_POLARITY_OFFSET,OutputPolarity);
+
+    Output[0].SetPin(A5,((OutputPolarity &  (1 << 0)) == 0) ? 0 : 1);
+    Output[1].SetPin(A4,((OutputPolarity &  (1 << 1)) == 0) ? 0 : 1);
+    Output[2].SetPin(A3,((OutputPolarity &  (1 << 2)) == 0) ? 0 : 1);
+    Output[3].SetPin(A2,((OutputPolarity &  (1 << 3)) == 0) ? 0 : 1);
+    Output[4].SetPin(A1,((OutputPolarity &  (1 << 4)) == 0) ? 0 : 1);
+    Output[5].SetPin(A0,((OutputPolarity &  (1 << 5)) == 0) ? 0 : 1);
   #endif
 }
 
@@ -77,5 +81,15 @@ void tOutput::SetState(uint8_t State)
   #endif
   mState = State; 
   if (PIN_NOT_ASSIGNED != mPin)
-     digitalWrite(mPin,(State ? LOW : HIGH));
+  {
+     if (mPolarity)
+     {
+        digitalWrite(mPin,(mState ? HIGH : LOW)); //reversed
+     }
+     else
+     {
+        digitalWrite(mPin,(mState ? LOW  : HIGH)); // normal
+     }
+  }
+
 }

@@ -6,13 +6,14 @@
 #include "CommDefs.h"
 
 #define ACTION_TABLE_SIZE 139   // eeprom is full
-#define EEPROM_CANNARY 0xAC     // change if update changes EEPROM structure
+#define EEPROM_CANNARY 0xAD     // change if update changes EEPROM structure
 
 typedef struct __tEeprom
 {
   uint8_t DeviceID;  // MUST be at the 1st position
 #ifndef CONTROLLER
   uint16_t InputPolarity;      // 0 means negative trigger, 1 positive trigger
+  uint8_t  OutputPolarity;     // 0 means active low, 1 active high
 #endif
   uint8_t CANNARY;   // a cannary, if is not set to EEPROM_CANNARY the eeprom should be set to default
   uint8_t DoubleClickTime;    // an externally provided double click time
@@ -34,8 +35,10 @@ typedef struct __tEeprom
 
 #ifndef CONTROLLER
 #define EEPROM_INPUT_POLARITY_OFFSET offsetof(__tEeprom,InputPolarity)
+#define EEPROM_OUTPUT_POLARITY_OFFSET offsetof(__tEeprom,OutputPolarity)
 #else
 #define EEPROM_INPUT_POLARITY_OFFSET 0
+#define EEPROM_OUTPUT_POLARITY_OFFSET 0
 #endif
 
 #define EEPROM_CANNARY_OFFSET offsetof(__tEeprom,CANNARY)
