@@ -20,7 +20,7 @@ public:
      if (timerLongerOnly && (mTimer > Timer))
            Timer = mTimer;
 
-     if (mState) mTimer = Timer; else mTimer = 0;
+     if (State) mTimer = Timer; else mTimer = 0;
      SetState(State);
   }
   void Toggle(uint16_t Timer) 
