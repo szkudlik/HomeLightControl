@@ -1,0 +1,18 @@
+[submodule "lib/AceCRC"]
+	path = lib/AceCRC
+	url = https://github.com/bxparks/AceCRC
+[submodule "lib/ArduinoQueue"]
+	path = lib/ArduinoQueue
+	url = https://github.com/EinarArnason/ArduinoQueue
+[submodule "lib/Commander"]
+	path = lib/Commander
+	url = https://github.com/CreativeRobotics/Commander
+[submodule "lib/ArduinoProcessScheduler"]
+	path = lib/ArduinoProcessScheduler
+	url = https://github.com/wizard97/ArduinoProcessScheduler
+[submodule "lib/ArduinoRingBuffer"]
+	path = lib/ArduinoRingBuffer
+	url = https://github.com/wizard97/ArduinoRingBuffer
+[submodule "lib/Watchdog"]
+	path = lib/Watchdog
+	url = https://github.com/janelia-arduino/Watchdog.git
